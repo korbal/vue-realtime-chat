@@ -5,9 +5,9 @@
       <div class="card-cotnent">
         <ul class="messages">
           <li v-for="message in messages" :key="message.id">
-            <span class="teal-text">{{message.name}}</span>
-            <span class="grey-text text-darker-3">{{message.content}}</span>
-            <span class="grey-text time">{{message.timestamp}}</span>
+            <span class="teal-text">{{ message.name }} said: </span>
+            <span class="grey-text text-darker-3">{{ message.content }}</span>
+            <span class="grey-text time">{{ message.timestamp }}</span>
           </li>
         </ul>
       </div>
@@ -20,6 +20,7 @@
 <script>
 import NewMessage from "@/components/NewMessage";
 import db from "@/firebase/init";
+import moment from "moment";
 
 export default {
   name: "Chat",
@@ -48,7 +49,8 @@ export default {
             id: doc.id,
             name: doc.data().name,
             content: doc.data().content,
-            timestamp: doc.data().timestamp
+            //formatting here with moment to the correct format
+            timestamp: moment(doc.data().timestamp).format("lll")
           });
         }
       });
@@ -69,6 +71,6 @@ export default {
 
 .chat .time {
   display: block;
-  font-size: 1.2em;
+  font-size: 0.8em;
 }
 </style>
