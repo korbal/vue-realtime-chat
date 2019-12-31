@@ -4,10 +4,10 @@
     <div class="card">
       <div class="card-cotnent">
         <ul class="messages">
-          <li>
-            <span class="teal-text">Name</span>
-            <span class="grey-text text-darker-3">Message</span>
-            <span class="grey-text time">time</span>
+          <li v-for="message in messages" :key="message.id">
+            <span class="teal-text">{{message.name}}</span>
+            <span class="grey-text text-darker-3">{{message.content}}</span>
+            <span class="grey-text time">{{message.timestamp}}</span>
           </li>
         </ul>
       </div>
@@ -19,6 +19,7 @@
 </template>
 <script>
 import NewMessage from "@/components/NewMessage";
+import db from "@/firebase/init";
 
 export default {
   name: "Chat",
@@ -27,7 +28,31 @@ export default {
     NewMessage
   },
   data() {
-    return {};
+    return {
+      //this is populated real time from db, populated in the ui with v-for
+      messages: []
+    };
+  },
+  created() {
+    //listening to db changes, to display them in real time in the window
+    let ref = db.collection("messages").orderBy("timestamp");
+
+    ref.onSnapshot(snapshot => {
+      //snapshot is the full db. we only need the changes, so:
+      //console.log(snapshot.docChanges());
+      snapshot.docChanges().forEach(change => {
+        if (change.type == "added") {
+          //output in the template
+          let doc = change.doc;
+          this.messages.push({
+            id: doc.id,
+            name: doc.data().name,
+            content: doc.data().content,
+            timestamp: doc.data().timestamp
+          });
+        }
+      });
+    });
   }
 };
 </script>
