@@ -3,7 +3,7 @@
     <h2 class="center teal-text">Ninja Chat</h2>
     <div class="card">
       <div class="card-cotnent">
-        <ul class="messages">
+        <ul class="messages" v-chat-scroll>
           <li v-for="message in messages" :key="message.id">
             <span class="teal-text">{{ message.name }} said: </span>
             <span class="grey-text text-darker-3">{{ message.content }}</span>
@@ -72,5 +72,9 @@ export default {
 .chat .time {
   display: block;
   font-size: 0.8em;
+}
+.messages {
+  max-height: 300px;
+  overflow: auto;
 }
 </style>
